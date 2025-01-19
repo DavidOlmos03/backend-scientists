@@ -1,0 +1,42 @@
+# Python
+*.pyc
+*.pyo
+__pycache__/
+*.pyd
+*.db
+*.sqlite3
+*.log
+*.bak
+
+# Flask
+instance/
+*.py[cod]
+*.swp
+*.swo
+.env
+.env.local
+.venv/
+venv/
+ENV/
+env/
+
+# Virtual Environment
+.venv/
+venv/
+
+
+# Linux
+*~
+.rocks/
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# VS Code
+.vscode/
+
+node_modules/

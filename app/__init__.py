@@ -1,0 +1,16 @@
+from flask import Flask
+from flask_restx import Api
+from app.routes.scientist_crud import scientist_api
+from flask_cors import CORS
+
+def create_app():
+    app = Flask(__name__)
+    CORS(app, resources={r"/scientists/*": {"origins": "*"}})
+    app.config.from_pyfile('config.py')  # Cargar configuraciones desde config.py
+    api = Api(app, title="Scientist API", version="1.0", description="API for managing scientists")
+
+    # Registrar namespaces
+    api.add_namespace(scientist_api, path='/scientists')
+
+    return app
+

@@ -1,0 +1,93 @@
+import pytest
+from flask import Flask
+from flask_restx import Api
+from app.routes.scientist_crud import scientist_api
+from app.services.scientist_service import (
+    get_all_scientists, get_scientist_by_id, create_scientist, update_scientist, delete_scientist
+)
+
+# Simulamos los servicios de Scientist
+def mock_get_all_scientists():
+    return [
+        {'id': 1, 'name': 'Albert Einstein', 'birthday': '1879-03-14', 'description': 'Theoretical physicist', 'area': 'Physics'},
+        {'id': 2, 'name': 'Marie Curie', 'birthday': '1867-11-07', 'description': 'Pioneer in radioactivity', 'area': 'Chemistry'}
+    ]
+
+def mock_get_scientist_by_id(id):
+    if id == 1:
+        return (1, 'Albert Einstein', '1879-03-14', 'Theoretical physicist', 'Physics')
+    return None
+
+def mock_create_scientist(name, birthday, description, area):
+    return 3  # New ID
+
+def mock_update_scientist(id, name, birthday, description, area):
+    pass
+
+def mock_delete_scientist(id):
+    pass
+
+# Configuración del cliente de prueba
+@pytest.fixture
+def client():
+    app = Flask(__name__)
+    app.config['TESTING'] = True
+    api = Api(app)
+    api.add_namespace(scientist_api)
+    with app.test_client() as client:
+        yield client
+
+# Mocking de servicios
+@pytest.fixture(autouse=True)
+def mock_services(monkeypatch):
+    monkeypatch.setattr('app.services.scientist_service.get_all_scientists', mock_get_all_scientists)
+    monkeypatch.setattr('app.services.scientist_service.get_scientist_by_id', mock_get_scientist_by_id)
+    monkeypatch.setattr('app.services.scientist_service.create_scientist', mock_create_scientist)
+    monkeypatch.setattr('app.services.scientist_service.update_scientist', mock_update_scientist)
+    monkeypatch.setattr('app.services.scientist_service.delete_scientist', mock_delete_scientist)
+
+# Pruebas para el endpoint ScientistList
+def test_get_all_scientists(client):
+    response = client.get('/scientists/')
+    assert response.status_code == 200
+    assert len(response.json) == 2
+    assert response.json[0]['name'] == 'Albert Einstein'
+
+def test_create_scientist(client):
+    data = {
+        'name': 'Isaac Newton',
+        'birthday': '1643-01-04',
+        'description': 'Mathematician and physicist',
+        'area': 'Physics'
+    }
+    response = client.post('/scientists/', json=data)
+    assert response.status_code == 201
+    assert response.json['id'] == 3
+    assert response.json['name'] == 'Isaac Newton'
+
+# Pruebas para el endpoint Scientist
+def test_get_scientist_by_id(client):
+    response = client.get('/scientists/1')
+    assert response.status_code == 200
+    assert response.json['name'] == 'Albert Einstein'
+
+def test_get_scientist_not_found(client):
+    response = client.get('/scientists/99')
+    assert response.status_code == 404
+    assert 'not found' in response.json['message']
+
+def test_update_scientist(client):
+    data = {
+        'name': 'Albert Einstein',
+        'birthday': '1879-03-14',
+        'description': 'Updated description',
+        'area': 'Physics'
+    }
+    response = client.put('/scientists/1', json=data)
+    assert response.status_code == 200
+    assert response.json['description'] == 'Updated description'
+
+def test_delete_scientist(client):
+    response = client.delete('/scientists/1')
+    assert response.status_code == 200
+    assert 'deleted' in response.json['message']
