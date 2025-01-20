@@ -3,7 +3,10 @@ import os
 
 load_dotenv()  
 
-class config:
+class Config:
+    """
+        Configurations for the application
+    """
     DEBUG = True
     # SQLALCHEMY_DATABASE_URI = (
     #     f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"

@@ -1,13 +1,13 @@
 import psycopg2
-from app.config import config
+from app.config import Config
 
 def get_db_connection():
     connection = psycopg2.connect(
-        host=config.DB_HOST,
-        port=config.DB_PORT,
-        dbname=config.DB_NAME,
-        user=config.DB_USER,
-        password=config.DB_PASSWORD
+        host=Config.DB_HOST,
+        port=Config.DB_PORT,
+        dbname=Config.DB_NAME,
+        user=Config.DB_USER,
+        password=Config.DB_PASSWORD
     )
     return connection
 
