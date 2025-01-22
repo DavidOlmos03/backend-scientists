@@ -112,18 +112,33 @@ def test_create_scientist(client):
     assert response.json['id'] == 3
     assert response.json['name'] == 'Isaac Newton'
 
-# Pruebas para el endpoint Scientist
+# Tests for the endpoint Scientist
 def test_get_scientist_by_id(client):
+    """
+        Test the endpoint /scientists/<id>
+        GET method
+        When the scientist is found
+    """
     response = client.get('/scientists/2')
     assert response.status_code == 200
     assert response.json['name'] == 'Albert Einstein'
 
 def test_get_scientist_not_found(client):
+    """
+        Test the endpoint /scientists/<id>
+        GET method
+        When the scientist is not found
+    """
     response = client.get('/scientists/99')
     assert response.status_code == 404
     assert 'not found' in response.json['message']
 
 def test_update_scientist(client):
+    """
+        Test the endpoint /scientists/<id>
+        PUT method
+        When the scientist is found
+    """
     data = {
         'name': 'Albert Einstein',
         'birthday': '1879-03-14',
@@ -135,6 +150,11 @@ def test_update_scientist(client):
     assert response.json['description'] == 'Updated description'
 
 def test_delete_scientist(client):
+    """
+        Test the endpoint /scientists/<id>
+        DELETE method
+        When the scientist is found
+    """
     response = client.delete('/scientists/2')
     assert response.status_code == 200
     assert 'deleted' in response.json['message']
