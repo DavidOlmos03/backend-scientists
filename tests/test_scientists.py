@@ -109,32 +109,32 @@ def test_create_scientist(client):
     }
     response = client.post('/scientists/', json=data)
     assert response.status_code == 201
-    assert response.json['id'] == 15
+    assert response.json['id'] == 3
     assert response.json['name'] == 'Isaac Newton'
 
 # Pruebas para el endpoint Scientist
-# def test_get_scientist_by_id(client):
-#     response = client.get('/scientists/1')
-#     assert response.status_code == 200
-#     assert response.json['name'] == 'Albert Einstein'
+def test_get_scientist_by_id(client):
+    response = client.get('/scientists/2')
+    assert response.status_code == 200
+    assert response.json['name'] == 'Albert Einstein'
 
-# def test_get_scientist_not_found(client):
-#     response = client.get('/scientists/99')
-#     assert response.status_code == 404
-#     assert 'not found' in response.json['message']
+def test_get_scientist_not_found(client):
+    response = client.get('/scientists/99')
+    assert response.status_code == 404
+    assert 'not found' in response.json['message']
 
-# def test_update_scientist(client):
-#     data = {
-#         'name': 'Albert Einstein',
-#         'birthday': '1879-03-14',
-#         'description': 'Updated description',
-#         'area': 'Physics'
-#     }
-#     response = client.put('/scientists/1', json=data)
-#     assert response.status_code == 200
-#     assert response.json['description'] == 'Updated description'
+def test_update_scientist(client):
+    data = {
+        'name': 'Albert Einstein',
+        'birthday': '1879-03-14',
+        'description': 'Updated description',
+        'area': 'Physics'
+    }
+    response = client.put('/scientists/2', json=data)
+    assert response.status_code == 200
+    assert response.json['description'] == 'Updated description'
 
-# def test_delete_scientist(client):
-#     response = client.delete('/scientists/1')
-#     assert response.status_code == 200
-#    assert 'deleted' in response.json['message']
+def test_delete_scientist(client):
+    response = client.delete('/scientists/2')
+    assert response.status_code == 200
+    assert 'deleted' in response.json['message']
