@@ -37,6 +37,23 @@ services:
     networks:
       - scientists
 
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: pytest --disable-warnings
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    networks:
+      - scientists
+    depends_on:
+      - scientists-database-services
+      - scientists-postgres-db
+    
+
+
 volumes:
   postgres_data:
     name: postgres_data
